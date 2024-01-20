@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1 Cart</title>
+    <link rel="stylesheet" href="ecomm.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Lobster&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <img src="img/a1.jpg" alt="" width="150px">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="ecomm.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="cart.html">Cart</a></li>
+                </ul>
+            </nav>
+        </div>
+        <h1><center>Your Shopping Cart</center></h1>
+        <div id="shoppingcart">
+            <table id="cartItems">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <style>
+            table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            }
+        </style>
+    
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Function to display cart items on the page
+                function displayCart() {
+                    // Check if cart exists in localStorage
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+                    // Get the table body element
+                    const cartItemsElement = document.querySelector('#cartItems tbody');
+    
+                    // Clear previous content
+                    cartItemsElement.innerHTML = '';
+    
+                    let totalPrice = 0;
+    
+                    // Display each item in the cart with a default quantity of 1
+                    cart.forEach(function (item) {
+                        const row = document.createElement('tr');
+                        const itemTotal = item.price * item.quantity;
+                        totalPrice += itemTotal;
+    
+                        row.innerHTML = `
+                            <td>${item.name}</td>
+                            <td>AED ${item.price}</td>
+                            <td>
+                                <button onclick="decrementQuantity('${item.name}')">-</button>
+                                <span id="${item.name}-quantity">${item.quantity}</span>
+                                <button onclick="incrementQuantity('${item.name}')">+</button>
+                            </td>
+                            <td>AED ${itemTotal}</td>
+                        `;
+                        cartItemsElement.appendChild(row);
+                    });
+    
+                    // Display the total price
+                    const totalElement = document.createElement('tr');
+                    totalElement.innerHTML = `
+                        <td colspan="3" style="text-align: right;">Total Price:</td>
+                        <td>AED ${totalPrice.toFixed(2)}</td>
+                    `;
+                    cartItemsElement.appendChild(totalElement);
+                }
+    
+                // Function to increment the quantity
+                window.incrementQuantity = function (productName) {
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    const updatedCart = cart.map(item => {
+                        if (item.name === productName) {
+                            item.quantity = item.quantity + 1;
+                        }
+                        return item;
+                    });
+                    localStorage.setItem('cart', JSON.stringify(updatedCart));
+                    displayCart();
+                };
+    
+                // Function to decrement the quantity or remove the item if the quantity is 1
+                window.decrementQuantity = function (productName) {
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    const updatedCart = cart.filter(item => {
+                        if (item.name === productName) {
+                            item.quantity = item.quantity - 1;
+                            return item.quantity > 0; // Keep item if quantity is greater than 1
+                        }
+                        return true;
+                    });
+                    localStorage.setItem('cart', JSON.stringify(updatedCart));
+                    displayCart();
+                };
+    
+                // Call the displayCart function to show cart items on page load
+                displayCart();
+            });
+        </script>
+        
+
+<div class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="footer1">
+                <h3>Download Our App</h3>
+                <p>Download Our App for iOS and Android</p>
+                <div class="logo">
+                    <img src="img/store.jpg" alt="" width="310px">
+                </div>
+            </div>
+            <div class="footer2">
+                <img src="img/a1.jpg" alt="" width="150px">
+                <p>"Our mission is to provide customers with a convenient and efficient way to browse and purchase products from the comfort of their homes"</p>
+            </div>
+            <div class="footer3">
+                <h3>Links</h3>
+                <ul>
+                    <li>Coupons</li>
+                    <li>Blog Post</li>
+                    <li>Return Policy</li>
+                </ul>
+            </div>
+            <div class="footer4">
+                <h3>Follow Us</h3>
+                <ul>
+                    <li>Twitter</li>
+                    <li>Instagram</li>
+                    <li>Youtube</li>
+                    <li>Facebook</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <p class="copy">&copy; 2024 A1. All rights reserved</p>
+    </div>
+</div>
+
+</body>
+</html>
